@@ -50,7 +50,7 @@ Example :
 	- 3 Bridges
 	- 1st Bridge :
 		- 100 feet long
-		- 3 Hikers { A : 100 feet/min ; B : 50 feet/min ; C : 20 feet/min ; D : 10 feet/min }
+		- 4 Hikers { A : 100 feet/min ; B : 50 feet/min ; C : 20 feet/min ; D : 10 feet/min }
 	- 2nd Bridge :
 		- 250 feet long
 		- one additional hiker { E : 2.5 feet/min }
@@ -86,4 +86,70 @@ Solution - Evaluation :
 			- Individual work items
 			- Class hierarchy
 		- Try out a solution
+		- Assumption : Data available statically and ahead (about the bridges and the hikers)
+			- TODO : Check if you can dynamically create objects as and when you encounter bridges and hikers at those locations
+					(allows for creation of objects when they are encountered than ahead)
+		- Running in to some problem parsing in the YAML
+			- Just go ahead and submit the logic (assuming hte YAML read worked out)
+
+		- Assumption :
+			-Update hiker information at the bridge and then update bridge information
+				- Once you have the bridge information / automatically calculating and updating bridge information with time it would take to cross
+					(assumption here : once you have read the bridge information / no longer "adding" hikers at that point)
+
+		- Getter and setter methods to allow for understanding and preserving the state of the setup for each transitional movement of hikers
+		- Assumption :
+			- The way the information for time to cross the bridge is being calculated is in the order in which it is encountered
+				(the routine for the core logic is being called through "update state of all of the objects" route
+
+
+	- Logic 
+		- Start putting hikers in two buckets { START, END }
+			- { EVERYONE in START : descending order of speed }
+				- pick two each from START bucket and transfer them over to END
+					- update time
+				- pick the fastest from the END bucket and transfer them over to START
+					- update time
+			- REPEAT THE ABOVE UNTIL there is no one on START
+
+	- 1st Bridge :
+		- Iteration 1 :
+			- START : { A (100), B (50), C (20), D (10) }
+			- END : { }
+			- TRANSFER : 
+				- START : { C (20), D (10) }
+				- END : { A (100), B (50) }
+					- TIME : 2
+				- START : { A, C, D }
+				- END : { B }
+					- TIME : 1
+			- TOTAL TIME : 3
+		- Iteration 2 :
+			- START : { A (100), C (20), D (10) }
+			- END : { B }
+			- TRANSFER : 
+				- START : { A }
+				- END : { B, C, D }
+					- TIME : 10
+				- START : { A, B }
+				- END : { C, D }
+					- TIME : 2
+				- TIME FOR ITERATION : 2 + 10 = 12
+			- TOTAL TIME : 3 + 12 = 15
+		- Iteration 3 : 
+			- START : { A, B }
+			- END : { C, D }
+			- TRANSFER :
+				- START : { }
+				- END : { A, B, C, D }
+					- TIME : 2
+				(No one on start) // exit
+				- TIME FOR ITERATION : 2
+			- TOTAL TIME : 15 + 2
+
+
+	- Things to do :
+		- Can optimize this solution by inserting the element in the end of who can go back most of the times // fastest hiker to cross as many times as he can
+
+				
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
